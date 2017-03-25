@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{ title }} - Find your Stats! </title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+
+    <style type="text/css">
+      .CustomLabel {font-family: 'Josefin Sans', sans-serif; font-size: 14pt;width: 100%}
+      .Custombtn {font-family: 'Josefin Sans', sans-serif; width: 100%; align-self: center;}
+      .AddColbtn {font-family: 'Josefin Sans', sans-serif; width: 100%;}
+      .CustomTabs {font-family: 'Josefin Sans', sans-serif; font-size: 12pt;}
+      .CustomHeader {font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 20pt;}
+      .container { max-width: 800px;}
+    </style>
+
+    <script type="text/javascript"> 
+
+      function reDirect() 
+      {
+        location.href = "{{ url_for('create') }}";
+      }
+
+      var tbIndex = 1;
+      function createRow()
+      {
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(table.rows.length-1);
+
+        for(var c = 0; c < table.rows[0].cells.length; c++)
+        {
+            var textarea = document.createElement('textarea');
+            textarea.id = "txtArea"+tbIndex;
+            textarea.placeholder = "Value";
+            textarea.className = "Customtextbox";
+            var cell = row.insertCell(c);            
+            cell.appendChild(textarea);
+            tbIndex++;
+        }
+      }
+    </script>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="{{ url_for('index') }}" class="CustomTabs">Home</a></li>
+            <li role="presentation"><a href="{{ url_for('create') }}" class="CustomTabs">Create</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted CustomHeader">Created Metrics</h3>
+      </div>
+ 
+      <div class="jumbotron">
+      <table id="MetricList" class="table table-bordered">
+          <tr>
+              <td align="left">
+                  <label id="lblStatsHeading" class="CustomHeader">Your Metrics</label>
+              </td>   
+          </tr>
+          <tr>
+          		<td>
+          			<table id="tblRes" class="table table-bordered">
+						{% for key, value in posts.iteritems() %}
+   						<tr>
+   							<form action="/stats" method="POST">
+        						<td class="CustomLabel">
+        							<input type="label" id="{{ key }}" name="{{ key }}" Value ="{{ key }}" class="CustomLabel" readonly />
+        						</td>
+        						<td>
+        							<input type="submit" name="btnGetStats" Value="Get Statistics" class="btn btn-primary AddColbtn"/>
+        						</td>
+        					</form>
+   						</tr>
+						{% endfor %}
+					</table>
+          		</td>
+          </tr>
+          <tr>
+              <td align="left">
+                  <button id="btnCreate" class="btn btn-primary AddColbtn" onclick="reDirect()">Create your Metric!</button>
+              </td>   
+          </tr>
+      </table>
+      </div> 
+    </div>
+  </body>
+</html>

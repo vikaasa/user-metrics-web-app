@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Get your Stats !</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+
+    <style type="text/css">
+      .Customtextbox {font-family: 'Josefin Sans', sans-serif; font-size: 14pt;width: 100%}
+      .CustomLabel {font-family: 'Josefin Sans', sans-serif; font-size: 14pt;width: 100%}
+      .Custombtn {font-family: 'Josefin Sans', sans-serif; width: 100%; align-self: center;}
+      .AddColbtn {font-family: 'Josefin Sans', sans-serif; width: 100%;}
+      .CustomTabs {font-family: 'Josefin Sans', sans-serif; font-size: 12pt;}
+      .CustomHeader {font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 20pt; align-self: left;}
+      .container { max-width: 800px;}
+    </style>
+
+    <script type="text/javascript"> 
+      var tbIndex = 1;
+      function createRow()
+      {
+        var table = document.getElementById("tblEdit");
+        var row = table.insertRow(table.rows.length-1);
+
+        for(var c = 0; c < table.rows[0].cells.length; c++)
+        {
+            var input = document.createElement('input');
+            input.id = "Value"+tbIndex;
+            input.type = "number";
+            input.step = "any"
+            input.name = "Value"+tbIndex;
+            input.placeholder = "Value";
+            input.className = "Customtextbox";
+            var cell = row.insertCell(c);            
+            cell.appendChild(input);
+            tbIndex++;
+        }
+      }
+
+      function validateForm() {
+        var table = document.getElementById("tblEdit");
+        for(var c=1; c<table.rows.length-1;c++)
+        {
+          var colName = "Value"+c;
+          var val = document.forms["editForm"][colName].value;
+          if (val.toString().localeCompare("")===0) {
+            event.preventDefault();
+            alert("Please provide a value");
+            return false;
+        }
+      }
+    }
+    </script>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="{{ url_for('index') }}" class="CustomTabs">Home</a></li>
+            <li role="presentation"><a href="{{ url_for('create') }}" class="CustomTabs">Create</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted CustomHeader">Metric Statistics</h3>
+      </div>
+ 
+      <div class="jumbotron">
+      <form name="editForm" action="/result" onsubmit="validateForm()" method="POST">
+      <table id="MetricList" class="table table-bordered">
+          <tr>
+              <td align="left">
+                  <table id="tblRes" class="table table-bordered">
+                    <tr>
+                      <td class="CustomLabel">
+                        <label id="lblMean" class="CustomLabel">Metric Mean</label>
+                    </td>
+                    <td class="CustomLabel">
+                      {{ metric_mean }}
+                    </td>
+                    </tr>
+                    <tr>
+                    <td class="CustomLabel">
+                        <label id="lblMedian" class="CustomLabel">Metric Median</label>
+                    </td>
+                    <td class="CustomLabel">
+                      {{ metric_median }}
+                    </td>
+                    </tr>
+                    <tr>
+                      <td class="CustomLabel">
+                        <label id="lblMin" class="CustomLabel">Metric Min</label>
+                    </td>
+                    <td class="CustomLabel">
+                      {{ metric_min }}
+                    </td>
+                    </tr>
+                    <tr>
+                    <td class="CustomLabel">
+                        <label id="lblMax" class="CustomLabel">Metric Max</label>
+                    </td>
+                    <td class="CustomLabel">
+                      {{ metric_max }}
+                    </td>
+                    </tr>
+                    </table>
+                    <table id="tblEdit" class="table table-bordered">
+                    <tr>
+                      <td>
+                        <label id="lblHeading" class="CustomHeader">Add To Metric: {{ metric_name }}</label>
+                        <input type="hidden" name="ColName" Value="{{ metric_name }}" />
+                      </td>
+                    </tr>
+                    {% for value in m_values %}
+                      <tr>
+                        <td class="CustomLabel">
+                          {{value}}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <input type="button" name="btnAdd" Value="Add Value" class="btn btn-primary Custombtn" onclick="createRow()"/>
+                        </td>
+                    </tr>
+                  </table> 
+      </table>
+      <table class="table table-condensed">
+          <tr>
+              <td>
+                <input type="submit" name="btnSub" Value="Submit" class="btn btn-primary AddColbtn"/>
+              </td>
+          </tr>
+      </table>
+      </form>
+      </div> 
+    </div>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Create your own Metrics !</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+
+    <style type="text/css">
+      .Customtextbox {font-family: 'Josefin Sans', sans-serif; font-size: 14pt;width: 100%}
+      .Custombtn {font-family: 'Josefin Sans', sans-serif; width: 50%; align-self: center;}
+      .AddColbtn {font-family: 'Josefin Sans', sans-serif; width: 50%; align-self: center;}
+      .CustomTabs {font-family: 'Josefin Sans', sans-serif; font-size: 12pt;}
+      .CustomHeader {font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 20pt;}
+      .container { max-width: 800px;}
+    </style>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+
+    <script type="text/javascript"> 
+
+      var tbIndex = 2;
+      function createRow()
+      {
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(table.rows.length-1);
+
+        for(var c = 0; c < table.rows[0].cells.length; c++)
+        {
+            var input = document.createElement('input');
+            input.id = "txtArea"+tbIndex;
+            input.type = "number";
+            input.step = "any"
+            input.name = "Value"+tbIndex;
+            input.placeholder = "Value";
+            input.className = "Customtextbox";
+            var cell = row.insertCell(c);            
+            cell.appendChild(input);
+            tbIndex++;
+        }
+      }
+
+      function validateForm() {
+        var table = document.getElementById("myTable");
+        var metric_name = document.forms["createForm"]["ColName"].value;
+        if (metric_name.toString().localeCompare("")===0) {
+          event.preventDefault();
+          alert("Metric Name must be filled");
+          return false;
+        }
+        for(var c=1; c<table.rows.length-1;c++)
+        {
+          var colName = "Value"+c;
+          var val = document.forms["createForm"][colName].value;
+          if (val.toString().localeCompare("")===0) {
+            event.preventDefault();
+            alert("Please provide a value");
+            return false;
+        }
+      }
+    }
+    </script>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="{{ url_for('index') }}" class="CustomTabs">Home</a></li>
+            <li role="presentation" class="active"><a href="create.html" class="CustomTabs">Create</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted CustomHeader">Create New Metric</h3>
+      </div>
+ 
+      <div class="jumbotron">
+      <form name="createForm" action="/result" onsubmit="validateForm()" method="POST">
+        <table id="myTable" class="table table-bordered">
+          <tr>
+            <td><input type="textarea" id="txtArea0" name="ColName" placeholder="Metric Name" class="Customtextbox"/></td>
+          </tr>
+          <tr>
+            <td><input type="number" step="any" id="txtArea1" name="Value1" placeholder="Value" class="Customtextbox"/></td>
+          </tr>
+          <tr>
+            <td><input type="button" name="btnAdd" Value="Add Value" class="btn btn-primary Custombtn" onclick="createRow()"/></td>
+          </tr>
+        </table>
+        <table class="table table-condensed">
+          <tr>
+              <td>
+                <input type="submit" name="btnSub" Value="Submit" class="btn btn-primary AddColbtn"/>
+              </td>
+          </tr>
+        </table>
+      </form>
+      </div> 
+    </div>
+  </body>
+</html>
