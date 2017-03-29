@@ -9,26 +9,6 @@ from unittest import TestCase
 from webtest import TestApp
 import json
 
-"""class ExampleTest(TestCase):
-    def setUp(self):
-        self.app = app
-        self.session = TestApp(self.app)
-
-    def test(self):
-        r = self.session.get('/')
-        print dir(self.session.post)
-        p = self.session.post('/post', 
-                       data=json.dumps({"title":"sample"}),
-                       content_type='application/json')
-        print p
-        # Assert there was no messages flushed:
-        self.assertFalse(r.flashes)
-        # Access and check any variable from template context...
-        self.assertEqual(r.context['text'], 'Hello!')
-        self.assertEqual(r.template, 'template.html')
-        # ...and from session
-        self.assertNotIn('user_id', r.session)"""
-
 class TestMetrics(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
@@ -75,12 +55,12 @@ class TestMetrics(unittest.TestCase):
     def test_badRequest(self):
         # test if request is in wrong format
         response = self.app.post('/create', 
-                       data=json.dumps({"name":"sample"}),
+                       data=json.dumps({"wrong_header":"sample"}),
                        content_type='application/json')
         self.assertEqual(response.status_code, 400)    
 
     def test_postMetrics(self):
-        # test if request is in wrong format
+        # test to check posting a metric
         
         # initializing posted_metrics
         views.posted_metrics = {"sample" : {
@@ -238,6 +218,13 @@ class TestMetrics(unittest.TestCase):
 
         # test responses
         response = self.app.get('/get/metric_that_does_not_exist', content_type='application/json')
+        #print json.loads(response.data)
+
+        # checking response code to verify that metric is not found
+        self.assertEqual(response.status_code, 404)
+
+        # test responses
+        response = self.app.get('/getvalues/metric_that_does_not_exist', content_type='application/json')
         #print json.loads(response.data)
 
         # checking response code to verify that metric is not found
