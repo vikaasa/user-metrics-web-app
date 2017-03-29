@@ -113,7 +113,7 @@ class TestMetrics(unittest.TestCase):
                content_type='application/json')
 
         expected = {"sample" : {
-                        'values': [90.0,74.0,95.5, 97.5],
+                        'values': [90.0,74.0,95.5,97.5],
                         'min': 74.0,
                         'max': 97.5,
                         'mean': 89.25,
@@ -121,6 +121,23 @@ class TestMetrics(unittest.TestCase):
                         'sum':357.0,
                         'small_heap': [-90.0,-74.0],
                         'large_heap': [95.5,97.5]}}
+        
+        #print views.posted_metrics
+        self.assertEqual(views.posted_metrics, expected)
+
+        response = self.app.post('/post', 
+               data=json.dumps({"title":"sample", "value":"-100.0"}),
+               content_type='application/json')
+
+        expected = {"sample" : {
+                        'values': [90.0,74.0,95.5,97.5,-100.0],
+                        'min': -100.0,
+                        'max': 97.5,
+                        'mean': 51.4,
+                        'median': 90.0,
+                        'sum':257.0,
+                        'small_heap': [-74.0,100],
+                        'large_heap': [90.0,97.5,95.5]}}
         
         #print views.posted_metrics
         self.assertEqual(views.posted_metrics, expected)
