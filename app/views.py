@@ -83,7 +83,12 @@ def get_metric(metric_name):
                     'min': posted_metrics[metric_name]['min'],
                     'max': posted_metrics[metric_name]['max']})
 
-#curl -i http://localhost:5000/get/sample
+#curl -i http://localhost:5000/getlist
+@app.route('/getlist', methods=['GET'])
+def get_all_metrics(): 
+    return jsonify({'metrics': sorted(posted_metrics.keys())})
+
+#curl -i http://localhost:5000/getvalues/sample
 @app.route('/getvalues/<metric_name>', methods=['GET'])
 def get_values(metric_name):
   if metric_name not in posted_metrics:

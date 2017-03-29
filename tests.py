@@ -204,6 +204,36 @@ class TestMetrics(unittest.TestCase):
         # check if the GET request has the correct output
         self.assertEqual(json.loads(response.data), {"values": [90.0,74.0,95.5,97.5]})
 
+    def test_getListOfMetrics(self):
+        # initializing posted_metrics
+        views.posted_metrics = {"sample_metric_1" : {
+                                    'values': [90.0,74.0,95.5,97.5],
+                                    'min': 74.0,
+                                    'max': 97.5,
+                                    'mean': 89.25,
+                                    'median': 92.75,
+                                    'sum':259.5,
+                                    'small_heap': [-74.0,-90.0],
+                                    'large_heap': [95.5,97.5]}, 
+                                "sample_metric_2" : {
+                                    'values': [90],
+                                    'min': 90,
+                                    'max': 90,
+                                    'mean': 90,
+                                    'median': 90,
+                                    'sum':90,
+                                    'small_heap': [],
+                                    'large_heap': [90]}}
+
+        # test responses
+        response = self.app.get('/getlist', content_type='application/json')
+        #print json.loads(response.data)
+
+        # check if response is OK
+        self.assertEqual(response.status_code, 200)
+        # check if the GET request has the correct output
+        self.assertEqual(json.loads(response.data), {"metrics": ["sample_metric_1", "sample_metric_2"]})
+
     def test_checkingInvalidGetRequests(self):
         # initializing posted_metrics
         views.posted_metrics = {"sample" : {
